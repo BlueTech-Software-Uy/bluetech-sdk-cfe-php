@@ -44,25 +44,16 @@ $request = EmitComprobanteRequest::fromArray([
             'fechaEmision' => '2026-02-12',
             'formaPago' => 1,
         ],
-        'emisor' => [
-            //datos del emisor
-        ],
         'receptor' => [
             //datos del receptor
-        ],
-        'totales' => [
-            'tipoMoneda' => 'UYU',
-            'montoTotal' => 122,
-            'montoPagar' => 122,
-            'cantidadLineasDetalle' => 1,
         ],
         'detalles' => [
             [
                 'numeroLineaDetalle' => 1,
-                'indicadorFacturacion' => 1,
+                'indicadorFacturacion' => 3,
                 'nombreItem' => 'Plan mensual',
                 'cantidad' => 1,
-                'precioUnitario' => 100,
+                'precioUnitario' => 122,
                 'montoItem' => 122,
             ],
         ],
@@ -73,6 +64,16 @@ $emitido = $sdk->comprobantes()->emitir($request);
 echo $emitido->CodRespuesta . PHP_EOL;
 echo $emitido->TipoCfe . '-' . $emitido->Serie . '-' . $emitido->Nro . PHP_EOL;
 ```
+
+## Novedad API (2026-02-17)
+
+Para `POST /api/v1/comprobante/emitir`:
+
+- `cfe.totales` es opcional. Si no se envia (o llega vacio), la API lo calcula desde `cfe.detalles`.
+- `cfe.emisor` es opcional. Si no se envia (o no tiene `ruc`), la API lo completa desde empresa/sucursal segun `idEmpresa + codComercio` y `idDoc.fechaEmision`.
+
+Nota SDK:
+- El modelo `CfePayload` define `emisor` y `totales` como arreglos vacios por defecto. Eso es compatible con el comportamiento actual de la API.
 
 ## Script completo listo para ejecutar
 
@@ -264,4 +265,3 @@ vendor/bin/phpstan analyse -c phpstan.neon
 ## Licencia
 
 MIT
-

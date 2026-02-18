@@ -35,8 +35,9 @@ function logApiException(string $title, ApiException $e): void
 
 try {
     $baseUrl = getenv('BT_BASE_URL') ?: 'https://cfetesting.bluetechsoftware.cloud/cfe';
-    $username = getenv('BT_USER') ?: 'demoavanzado';
-    $secret = getenv('BT_SECRET') ?: '9978f03f445e3c999b723a91f90e858d53fd3f97049e504d0ddb941c330599f1';
+    $baseUrl = "http://localhost/cfe"; // Para pruebas locales con el mock server
+    $username = getenv('BT_USER') ?: 'hardcoded-user';
+    $secret = getenv('BT_SECRET') ?: 'hardcoded-secret';
 
     $httpClient = new GuzzleHttpClient([
         'timeout' => 30,
@@ -51,30 +52,18 @@ try {
     logLine('Autenticando usuario...');
     $sdk->auth()->loginAndSetToken($username, $secret);
 
+    // Desde 2026-02-17 se puede omitir cfe.emisor y cfe.totales:
+    // la API completa emisor por idEmpresa/codComercio/fechaEmision
+    // y calcula totales desde detalles.
     $request = EmitComprobanteRequest::fromArray([
-        'idEmpresa' => 2,
-        'codComercio' => 'blue001',
-        'codTerminal' => 'bl-01',
+        'idEmpresa' => 9,
+        'codComercio' => 'Blue001',
+        'codTerminal' => 'BT001',
         'cfe' => [
             'idDoc' => [
                 'tipoCfe' => 111,
                 'fechaEmision' => '2026-02-12',
                 'formaPago' => 1,
-            ],
-            'emisor' => [
-                'ruc' => '219879740012',
-                'razonSocial' => 'Empresa de Prueba S.A.',
-                'nombreComercial' => 'Empresa de Prueba',
-                'giro' => 'Servicios',
-                'telefono' => '12345678',
-                'segundoTelefono' => '87654321',
-                'email' => 'test@localhost',
-                'sucursal' => 'Sucursal Principal',
-                'codigoDgiSucursal' => 1,
-                'domicilioFiscal' => 'Calle Falsa 123',
-                'ciudad' => 'Montevideo',
-                'departamento' => 'Montevideo',
-                'informacionAdicional' => 'Informacion adicional del emisor'
             ],
             'receptor' => [
                 'tipoDocumento' => 2,
@@ -90,25 +79,6 @@ try {
                 'informacionAdicional' => 'Informacion adicional del receptor',
                 'lugarEntrega' => 'GLN123',
                 'idCompraCliente' => '12345',
-            ],
-            'totales' => [
-                'tipoMoneda' => 'UYU',
-                'montoNoGravado' => 0,
-                'montoExportacionYAsim' => 0,
-                'montoImpuestoPercibido' => 0,
-                'montoIvaSuspenso' => 0,
-                'montoNetoIvaTasaMinima' => 0,
-                'montoNetoIvaTasaBasica' => 100,
-                'montoNetoIvaOtraTasa' => 0,
-                'tasaIvaTasaMinima' => 10,
-                'tasaIvaTasaBasica' => 22,
-                'montoIvaTasaMinima' => 0,
-                'montoIvaTasaBasica' => 22,
-                'montoIvaOtraTasa' => 0,
-                'montoNoFacturable' => 0,
-                'montoTotal' => 122,
-                'montoPagar' => 122,
-                'cantidadLineasDetalle' => 1,
             ],
             'detalles' => [
                 [

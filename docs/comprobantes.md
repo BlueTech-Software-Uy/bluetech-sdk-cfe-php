@@ -28,20 +28,14 @@ $request = EmitComprobanteRequest::fromArray([
         'receptor' => [
             'idCliente' => 123,
         ],
-        'totales' => [
-            'tipoMoneda' => 'UYU',
-            'montoTotal' => 122,
-            'montoPagar' => 122,
-            'cantidadLineasDetalle' => 1,
-        ],
         'detalles' => [
             [
                 'numeroLineaDetalle' => 1,
-                'indicadorFacturacion' => 1,
+                'indicadorFacturacion' => 3,
                 'nombreItem' => 'Servicio',
                 'cantidad' => 1,
-                'precioUnitario' => 100,
-                'montoItem' => 100,
+                'precioUnitario' => 122,
+                'montoItem' => 122,
             ],
         ],
     ],
@@ -51,6 +45,13 @@ $resp = $sdk->comprobantes()->emitir($request);
 echo $resp->CodRespuesta; // 00
 echo $resp->Serie . '-' . $resp->Nro;
 ```
+
+## Novedades API (17-02-2026)
+
+- `cfe.totales` es opcional: si no se envia (o llega vacio), la API lo calcula desde `cfe.detalles`.
+- `cfe.emisor` es opcional: si no se envia (o no tiene `ruc`), la API lo completa automaticamente segun `idEmpresa + codComercio` y `idDoc.fechaEmision`.
+
+Esto habilita requests mas cortos en SDK, manteniendo compatibilidad con integraciones que siguen enviando `emisor` y `totales`.
 
 ## Campos del request soportados por modelo
 
@@ -67,9 +68,9 @@ echo $resp->Serie . '-' . $resp->Nro;
 `CfePayload` permite enviar:
 
 - `idDoc` (array)
-- `emisor` (array)
+- `emisor` (array, opcional)
 - `receptor` (array)
-- `totales` (array)
+- `totales` (array, opcional)
 - `detalles` (array de lineas)
 - `referencias` (array)
 - `descuentosRecargosGlobales` (array)
@@ -96,4 +97,3 @@ El SDK no impone validaciones fiscales de dominio; esas validaciones ocurren en 
 - `DatosQR`
 - `CodSeguridad`
 - `XmlFirmado`
-
