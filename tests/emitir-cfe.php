@@ -34,10 +34,11 @@ function logApiException(string $title, ApiException $e): void
 }
 
 try {
-    $baseUrl = getenv('BT_BASE_URL') ?: 'https://cfetesting.bluetechsoftware.cloud/cfe';
-    $baseUrl = "http://localhost/cfe"; // Para pruebas locales con el mock server
-    $username = getenv('BT_USER') ?: 'hardcoded-user';
-    $secret = getenv('BT_SECRET') ?: 'hardcoded-secret';
+    $baseUrl = getenv('BT_BASE_URL') ?: 'https://test.facture.uy/cfe';
+    //$baseUrl = "http://localhost/cfe"; // Para pruebas locales con el mock server
+    $username = getenv('BT_USER') ?: 'dev@bluetech'; //
+    $secret = getenv('BT_SECRET') ?: 'a81e364fbe7047fa286b8079a316f26f110ebf9f5fe4b86315e9d8ecb627776c';
+
 
     $httpClient = new GuzzleHttpClient([
         'timeout' => 30,
@@ -56,9 +57,9 @@ try {
     // la API completa emisor por idEmpresa/codComercio/fechaEmision
     // y calcula totales desde detalles.
     $request = EmitComprobanteRequest::fromArray([
-        'idEmpresa' => 9,
-        'codComercio' => 'Blue001',
-        'codTerminal' => 'BT001',
+        'idEmpresa' => 2,
+        'codComercio' => 'blue001',
+        'codTerminal' => 'bl-01',
         'cfe' => [
             'idDoc' => [
                 'tipoCfe' => 111,

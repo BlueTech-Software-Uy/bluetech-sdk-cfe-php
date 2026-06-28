@@ -250,6 +250,7 @@ $config->setRetryBackoffMs(500);
 
 ## Documentacion completa
 
+- [Abrir documentacion del SDK](docs/README.md)
 - `docs/README.md` (indice navegable)
 - `docs/comprobantes.md` (emitir CFE)
 - `docs/use-cases.md` (casos de uso E2E)
